@@ -34,5 +34,69 @@ public class PayUnitTest {
 		PaymentResponse pr = paymentService.insertPayment(paymentRequest);
 		assertEquals(1000, pr.getRemainingAmount());
 	}
+	
+	@Test  //카드번호 validation
+	void cardNumberValidationTest() throws Exception {
+		PaymentRequest paymentRequest = PaymentRequest
+				.builder()
+				.cardNumber("111122223333444444444444444444444")
+				.installmentMonth("03")
+				.validityPeriod("0522")
+				.cvc("527")
+				.price(1000)
+				.build();
+		PaymentResponse pr = paymentService.insertPayment(paymentRequest);
+	}
+	
+	@Test  //할부개월 validation
+	void installmentMonthIntegerValidationTest() throws Exception {
+		PaymentRequest paymentRequest = PaymentRequest
+				.builder()
+				.cardNumber("11112222333344444")
+				.installmentMonth("테스트")
+				.validityPeriod("0522")
+				.cvc("527")
+				.price(1000)
+				.build();
+		PaymentResponse pr = paymentService.insertPayment(paymentRequest);
+	}
 
+	
+	@Test  //중복결제
+	void paymentDuplicateTest() throws Exception {
+		PaymentRequest paymentRequest = PaymentRequest
+				.builder()
+				.cardNumber("11112222333344444")
+				.installmentMonth("테스트")
+				.validityPeriod("0522")
+				.cvc("527")
+				.price(1000)
+				.build();
+		PaymentResponse pr = paymentService.insertPayment(paymentRequest);
+		paymentRequest = PaymentRequest
+				.builder()
+				.cardNumber("111122223333444444444")
+				.installmentMonth("03")
+				.validityPeriod("0522")
+				.cvc("527")
+				.price(1000)
+				.build();
+		pr = paymentService.insertPayment(paymentRequest);
+		
+	}
+	
+	@Test  //부가세가 결제 금액 보다 큰 경우
+	void vatTest() throws Exception {
+		PaymentRequest paymentRequest = PaymentRequest
+				.builder()
+				.cardNumber("11112222333344444")
+				.installmentMonth("테스트")
+				.validityPeriod("0522")
+				.cvc("527")
+				.price(1000)
+				.vat("100000")
+				.build();
+		PaymentResponse pr = paymentService.insertPayment(paymentRequest);
+
+	}
 }

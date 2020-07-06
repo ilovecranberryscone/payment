@@ -37,4 +37,10 @@ public class HistoryUnitTest {
 		assertEquals(mNumber, pir.getManagementNumber());
 	}
 
+	
+	@Test //없는 번호 조회
+	void NoManagementNumberTest() throws Exception {
+		String mNumber = "20200707111222333334";
+		PaymentInfomationResponse pir = paymentService.retrievePayment(mNumber);
+	}
 }
